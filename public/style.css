@@ -1,0 +1,106 @@
+body{
+  padding-top:80px;
+  word-wrap:break-word;
+}
+img{
+  height: 200px;
+}
+body {
+  background-color: #f0f0f0;
+  font-family: 'Arial', sans-serif;
+}
+
+.container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.page-header {
+  background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/08/Library-Desktop-Wallpaper.jpg');
+  color: #fff;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+.page-header h1 {
+  color: #FF4136; /* Bright red for enthusiasm */
+}
+
+.page-header .fa-anchor {
+  color: #0074D9; /* A contrasting blue */
+}
+h1{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+.books li {
+  background-color: #E8E8E8;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  list-style-type: none;
+}
+
+.books h2 {
+  color: #FF851B; /* Bright orange for titles */
+}
+
+.books p {
+  color: #3D9970; /* Soothing green for details */
+}
+
+.fa-trash, .fa-thumbs-up, .fa-thumbs-down {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.fa-trash {
+  color: #FF4136;
+}
+
+.fa-thumbs-up {
+  color: #2ECC40;
+}
+
+.fa-thumbs-down {
+  color: #FFDC00;
+}
+
+button {
+  background-color: #0074D9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #001F3F;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+input[type="text"]:focus {
+  border-color: #0074D9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+      padding: 10px;
+  }
+}
