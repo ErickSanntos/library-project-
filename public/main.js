@@ -1,31 +1,38 @@
-var thumbUp = document.getElementsByClassName("fa-thumbs-up");
+var trash = document.getElementsByClassName("fa-trash");
 var check= document.getElementsByClassName("fa-check");
 
-Array.from(thumbUp).forEach(function(element) {
-      element.addEventListener('click', function(){
-        const name = this.parentNode.parentNode.childNodes[1].innerText
-        const msg = this.parentNode.parentNode.childNodes[3].innerText
-        const thumbUp = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
-        fetch('messages', {
-          method: 'put',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            'name': name,
-            'msg': msg,
-            'thumbUp':thumbUp
-          })
-        })
-        .then(response => {
-          if (response.ok) return response.json()
-        })
-        .then(data => {
-          console.log(data)
-          window.location.reload(true)
-        })
-      });
-});
+
 
 Array.from(check).forEach(function(element) {
+    element.addEventListener('click', function() {
+        const listItem = this.closest('li.message');
+        const isbn = listItem.getAttribute('data-isbn');
+
+        // Send a request to check out the book
+        fetch('/books/checkout', { // Use a separate route for checking out
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'isbn': isbn
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            // Update the availability status in the DOM
+            const statusElement = listItem.querySelector('p[data-status]');
+            if (data.available) {
+                statusElement.textContent = 'Available';
+            } else {
+                statusElement.textContent = 'Not Available';
+            }
+        });
+    });
+});
+
+
+Array.from(trash).forEach(function(element) {
   element.addEventListener('click', function() {
       // Use closest() to find the nearest ancestor which is an li element
       const listItem = this.closest('li.message');

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>21 Savage Fan Site</title>
+    <title>Book Library</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="font-awesome.min.css">
@@ -11,57 +11,51 @@
 <div class="container">
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-book"></span>check out a book</h1>
+        <h1><span class="fa fa-book"></span> Check Out a Book</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
-<!-- 
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
 
-                <% if (user.local.email) { %>
-                    <p>
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
-                        <strong>password</strong>: <%= user.local.password %>
-                    </p>
+    <div class="col-sm-6">
+        <h1>Books</h1>
+        <ul class="books">
+            <% books.forEach(function(book) { %>
+              <li class="message" data-isbn="<%= book.isbn %>">
+                <h2><%= book.title %></h2>
+                  <p>Author: <%= book.author %></p>
+                  <p>ISBN: <%= book.isbn %></p>
+                  <p>Availability: <%= book.available ? 'Available' : 'Not Available' %></p>
 
-                    <a href="/unlink/local" class="btn btn-default">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/local" class="btn btn-default">Connect Local</a>
-                <% } %>
-            </div>
-        </div> -->
+                <!-- ... -->
+                <!-- <p>Availability: <%= book.available ? 'Available' : 'Not Available' %></p> -->
+                    <% if (book.available) { %>
+                      <form action="/books/checkout" method="POST">
+                        <input type="hidden" name="isbn" value="<%= book.isbn %>">
+                        <button type="submit">Check Out</button>
+                      </form>
+                    <% } else { %>
+                      <form action="/books/return" method="POST">
+                        <input type="hidden" name="isbn" value="<%= book.isbn %>">
+                        <button type="submit">Return</button>
+                      </form>
+                    <% } %>
+                    <span><i class="fa fa-trash" aria-hidden="true"></i></span>
+                    <!-- <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span> -->
+              </li>
+              
+            <% }); %>
+          </ul>
+          
+          
 
-        <div class="col-sm-6">
-            <h1>Books</h1>
-            <ul class="books">
-                <% books.forEach(function(book) { %>
-                    <li class="message" data-isbn="<%= book.isbn %>">
-                        <h2><%= book.title %></h2>
-                        <p>Author: <%= book.author %></p>
-                        <p>ISBN: <%= book.isbn %></p>
-                        <span><%= book.thumbUp %></span>
-                        <span><i class="fa fa-check" aria-hidden="true">check-out</i></span>
-                        <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-                        <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
-                    </li> 
-                <% }); %>
-            </ul>
-            
-            
-
-            <% if (user.local.email) { %>
-                <h2>Add a book</h2>
-                <form action="/books" method="POST">
-                    <input type="text" placeholder="Title" name="title">
-                    <input type="text" placeholder="Author" name="author">
-                    <input type="text" placeholder="ISBN" name="isbn">
-                    <button type="submit">Submit</button>
-                </form>
-            <% } %>
-        </div>
+        <% if (user.local.email) { %>
+            <h2>Add a book</h2>
+            <form action="/books/add" method="POST">
+                <input type="text" placeholder="Title" name="title">
+                <input type="text" placeholder="Author" name="author">
+                <input type="text" placeholder="ISBN" name="isbn">
+                <button type="submit">Submit</button>
+            </form>
+        <% } %>
     </div>
 </div>
 
@@ -69,5 +63,6 @@
 
 </body>
 </html>
+
 `
 

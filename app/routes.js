@@ -10,8 +10,10 @@ module.exports = function(app, passport, db) {
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
       db.collection('books').find().toArray((err, result) => {
+        console.log('Books Data:', result);
         if (err) return console.log(err);
         res.render('profile.ejs', {
+          
           user: req.user,
           books: result  // Changed 'messages' to 'books'
         });
@@ -29,45 +31,102 @@ module.exports = function(app, passport, db) {
 
 // message board routes ===============================================================
 
-app.post('/books', (req, res) => {
+
+// Check out a book (mark it as not available)
+app.post('/books/checkout', (req, res) => {
+  const isbn = req.body.isbn;
+  
+  db.collection('books').findOneAndUpdate(
+    { isbn: isbn },
+    {
+      $set: {
+        available: false // Mark the book as not available
+      }
+    }, {
+      sort: { _id: -1 },
+      upsert: true
+    }, (err, result) => {
+      if (err) return res.send(err);
+      res.redirect('/profile'); // Redirect back to the profile page
+    });
+});
+
+// Return a book (mark it as available)
+//create books
+app.post('/books/add', (req, res) => {
   db.collection('books').insertOne({
     title: req.body.title,
     author: req.body.author,
-    isbn: req.body.isbn
-    // Add other book fields as necessary
+    isbn: req.body.isbn,
+    available: true,
   }, (err, result) => {
     if (err) return console.log(err);
     console.log('Book added to database');
     res.redirect('/profile');
   });
 });
+app.post('/books/return', (req, res) => {
+  const isbn = req.body.isbn;
 
-
-app.put('/books', (req, res) => {
   db.collection('books').findOneAndUpdate(
-    { isbn: req.body.isbn },  // Assuming ISBN as a unique identifier
+    { isbn: isbn },
     {
       $set: {
-        title: req.body.title,
-        author: req.body.author
-        // Update other fields as necessary
+        available: true // Mark the book as available again
       }
     }, {
-      sort: {_id: -1},
+      sort: { _id: -1 },
       upsert: true
     }, (err, result) => {
-      if (err) return res.send(err)
-      res.send(result)
-    })
-  })
-
-
-app.delete('/books', (req, res) => {
-    db.collection('books').findOneAndDelete({ isbn: req.body.isbn }, (err, result) => {
-        if (err) return res.send(500, err);
-        console.log('Book deleted');
-        res.send('Book deleted!');
+      if (err) return res.send(err);
+      res.redirect('/profile'); // Redirect back to the profile page
     });
+});
+
+//Update book information
+// app.put('/books', (req, res) => {
+//   db.collection('books').findOneAndUpdate(
+//     { isbn: req.body.isbn },
+//     {
+//       $set: {
+//         title: req.body.title,
+//         author: req.body.author,
+//         // Update other fields as necessary
+//       }
+//     }, {
+//       sort: { _id: -1 },
+//       upsert: true
+//     }, (err, result) => {
+//       if (err) return res.send(err);
+//       // res.send(result);
+//       res.redirect('/profile');
+//     });
+// });
+
+// Check out a book (mark it as not available)
+app.put('/books', (req, res) => {
+  db.collection('books').findOneAndUpdate(
+    { isbn: req.body.isbn },
+    {
+      $set: {
+        available: false // Mark the book as not available
+      }
+    }, {
+      sort: { _id: -1 },
+      upsert: true
+    }, (err, result) => {
+      if (err) return res.send(err);
+      res.send(result);
+    });
+});
+
+// Delete a book
+app.delete('/books', (req, res) => {
+  db.collection('books').findOneAndDelete({ isbn: req.body.isbn }, (err, result) => {
+    if (err) return res.send(500, err);
+    console.log('Book deleted');
+    res.send('Book deleted!');
+  });
 });
 
 
